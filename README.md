@@ -1,6 +1,6 @@
 # Verdaccio Populate Cache
 Script which populates cache for verdaccio npm proxy by installing top 1000 popular packages
-This script attempts to install last 4 versions of every npm package from file top-npm-packages.json
+This script attempts to install last 3 versions of every npm package from file top-npm-packages.json
 
 ## How to run
 * Run "npm config set registry {your private registry url}"
