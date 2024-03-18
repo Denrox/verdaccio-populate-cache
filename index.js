@@ -33,9 +33,6 @@ const populatePackages = async () => {
               console.error(`Invalid versions response for ${packages[i].name}`);
             }
           }
-          if (i > 5) {
-            break;
-          }
         }
       } catch (e) {
         throw 'Invalid json';
