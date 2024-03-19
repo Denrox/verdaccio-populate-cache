@@ -16,14 +16,14 @@ const populatePackages = async () => {
     throw 'Missing arguments';
   }
   const sleep = (arguments['--sleep'] || 0) * 1000;
-  const start = arguments['--start'] || 0;
+  const start = parseInt(arguments['--start']) || 0;
   readFile('./top-npm-packages.json', async (err, data) => {
     if (err) {
       throw 'Unable to read file';
     }
     if (data) {
       try {
-        const packages = JSON.parse(data).slice(start, arguments['--count']);
+        const packages = JSON.parse(data).slice(start, start + arguments['--count']);
         for (let i = 0; i < packages.length; i += 1) {
           try {
             const { stdout, stderr } = await execP(`npm view ${packages[i].name} versions`)
