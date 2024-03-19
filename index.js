@@ -7,7 +7,7 @@ const execP = promisify(exec);
 const populatePackages = async () => {
   const arguments = process.argv.reduce((acc, arg) => {
     const [key, value] = arg.split('=');
-    if (key && value && ['--count', '--versions', '--sleep'].includes(key)) {
+    if (key && value && ['--count', '--versions', '--sleep', '--start'].includes(key)) {
       acc[key] = parseInt(value);
     }
     return acc;
@@ -16,13 +16,14 @@ const populatePackages = async () => {
     throw 'Missing arguments';
   }
   const sleep = (arguments['--sleep'] || 0) * 1000;
+  const start = arguments['--start'] || 0;
   readFile('./top-npm-packages.json', async (err, data) => {
     if (err) {
       throw 'Unable to read file';
     }
     if (data) {
       try {
-        const packages = JSON.parse(data).slice(0, arguments['--count']);
+        const packages = JSON.parse(data).slice(start, arguments['--count']);
         for (let i = 0; i < packages.length; i += 1) {
           try {
             const { stdout, stderr } = await execP(`npm view ${packages[i].name} versions`)

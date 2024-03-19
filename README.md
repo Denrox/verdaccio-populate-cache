@@ -9,7 +9,8 @@ This script attempts to install last versions of every npm package from file top
 ## Parameters
 * "--count={c}" - count of top packages to install
 * "--versions={v}" - number of most recent versions to install for every package
-* "--sleep={s}" - timeout in seconds after every installation
+* "--sleep={s}" - timeout in seconds after every 
+* "--start={s}" - index of package to start from
 
 ## Packages which will not be cached
 This script will cache only those versions of packages which are supported by node version installed on the machine from which you run it.
