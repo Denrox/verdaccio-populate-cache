@@ -1,5 +1,5 @@
 # Verdaccio Populate Cache
-Script which populates cache for verdaccio npm proxy by installing top popular packages
+Script which populates cache for verdaccio npm proxy by installing top popular packages.
 This script attempts to install last versions of every npm package from file top-npm-packages.json
 
 ## How to run
