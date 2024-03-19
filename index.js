@@ -5,24 +5,37 @@ const { promisify } = require('util');
 const execP = promisify(exec);
 
 const populatePackages = async () => {
+  const arguments = process.argv.reduce((acc, arg) => {
+    const [key, value] = arg.split('=');
+    if (key && value && ['--count', '--versions', '--sleep'].includes(key)) {
+      acc[key] = parseInt(value);
+    }
+    return acc;
+  }, {});
+  if (!arguments['--count'] || !arguments['--versions']) {
+    throw 'Missing arguments';
+  }
+  const sleep = (arguments['--sleep'] || 0) * 1000;
   readFile('./top-npm-packages.json', async (err, data) => {
     if (err) {
       throw 'Unable to read file';
     }
     if (data) {
       try {
-        const packages = JSON.parse(data).slice(0, 1000);
+        const packages = JSON.parse(data).slice(0, arguments['--count']);
         for (let i = 0; i < packages.length; i += 1) {
-          await new Promise(resolve => setTimeout(resolve, 3000));
           try {
             const { stdout, stderr } = await execP(`npm view ${packages[i].name} versions`)
             if (stderr) {
               console.error(`Could not get versions for ${packages[i].name}`);
             } else {
               try {
+                await new Promise(resolve => setTimeout(resolve, sleep));
+                await execP(`npm install ${packages[i].name} --no-save --no-package-lock`);
                 const versions = JSON.parse(stdout.replace(/\'/g, '"'));
-                const lastVersions = versions.slice(-3);
+                const lastVersions = versions.slice(arguments['--versions'] * -1);
                 for (let k = 0; k < lastVersions.length; k += 1) {
+                  await new Promise(resolve => setTimeout(resolve, sleep));
                   try {
                     const { stderr } = await execP(`npm install ${packages[i].name}@${lastVersions[k]} --no-save --no-package-lock`);
                     if (stderr) {
